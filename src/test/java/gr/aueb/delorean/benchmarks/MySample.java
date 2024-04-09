@@ -15,7 +15,7 @@ public class MySample {
 
   public static double getSimPieceParam(int nout, TimeSeries ts, double accuracy)
       throws IOException {
-    double epsilon = ts.range * 0.005;
+    double epsilon = ts.range * 0.001;
     while (true) {
       SimPiece simPiece = new SimPiece(ts.data, epsilon);
       if (simPiece.segments.size() * 2 > nout) { // note *2 for disjoint
@@ -39,10 +39,14 @@ public class MySample {
   }
 
   public static void main(String[] args) {
-    int nout = 100;
+//    int nout = 300;
+    int nout = 8;
     String[] datasetNames = new String[]{"BallSpeed", "MF03", "Bitcoin", "V765"};
     boolean[] hasHeaderList = new boolean[]{false, false, false, false};
-    int[] Nlist = new int[]{100000, 100000, 100000, 100000}; // -1 means read all
+//    int[] Nlist = new int[]{50000, 50000, 50000, 50000}; // -1 means read all
+//    int[] startList = new int[]{0, 1000000, 200000, 0};
+    int[] Nlist = new int[]{600, 600, 600, 600}; // -1 means read all
+    int[] startList = new int[]{1000100, 1000100, 1000100, 1000100};
 //    int[] Nlist = new int[]{-1,-1,-1,-1}; // -1 means read all
 
     String filename = "D:\\kdd\\lts-exp\\datasets\\%s.csv";
@@ -53,7 +57,7 @@ public class MySample {
           String.format(filename, datasetNames[k]))) {
         String delimiter = ",";
         TimeSeries ts = TimeSeriesReader.getMyTimeSeries(inputStream, delimiter, false, Nlist[k],
-            hasHeaderList[k]);
+            startList[k], hasHeaderList[k]);
         System.out.println(ts.data.size());
 
         double epsilon = getSimPieceParam(nout, ts, 1e-6);

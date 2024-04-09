@@ -41,7 +41,9 @@ public class TimeSeriesReader {
   }
 
   public static TimeSeries getMyTimeSeries(InputStream inputStream, String delimiter, boolean gzip,
-      int N, boolean hasHeader) {
+      int N, int startRow, boolean hasHeader) {
+    // N<0 means read all lines
+
     ArrayList<Point> ts = new ArrayList<>();
     double max = Double.MIN_VALUE;
     double min = Double.MAX_VALUE;
@@ -57,11 +59,16 @@ public class TimeSeriesReader {
       if (hasHeader) {
         bufferedReader.readLine();
       }
+      int startCnt = 0;
+      while (startCnt < startRow && (line = bufferedReader.readLine()) != null) {
+        startCnt++;
+      }
+      if (startCnt < startRow) {
+        throw new IOException("not enough rows!");
+      }
       int cnt = 0;
-      // N<0 means read all lines
       while ((cnt < N || N < 0) && (line = bufferedReader.readLine()) != null) {
         String[] elements = line.split(delimiter);
-//        long timestamp = Long.parseLong(elements[0]);
         long timestamp = (long) Double.parseDouble(elements[0]);
         double value = Double.parseDouble(elements[1]);
         ts.add(new Point(timestamp, value));
