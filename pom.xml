@@ -55,14 +55,14 @@
 <!--        </plugins>-->
 <!--    </build>-->
     <build>
-        <finalName>MySample</finalName>
+        <finalName>MySample2</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>gr.aueb.delorean.MySample</mainClass>
+                            <mainClass>gr.aueb.delorean.MySample2</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
