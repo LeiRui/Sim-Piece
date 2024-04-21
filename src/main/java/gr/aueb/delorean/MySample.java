@@ -13,10 +13,9 @@ import java.util.List;
 
 public class MySample {
 
-  // java -jar MySample-jar-with-dependencies.jar "D:\\kdd\\lts-exp\\datasets\\%s.csv" "D:\\kdd\\lts-exp\\notebook\\SimPieceResults\\%s-%s-%s.csv"
+  // java -jar MySample-jar-with-dependencies.jar "D:\\kdd\\lts-exp\\datasets\\"
   public static void main(String[] args) {
-    String filename = args[0]; // e.g., "D:\\kdd\\lts-exp\\datasets\\%s.csv";
-    String csvFile = args[1]; // e.g., "D:\\kdd\\lts-exp\\notebook\\SimPieceResults\\%s-%s-%s.csv";
+    String fileDir = args[0]; // e.g., "D:\\kdd\\lts-exp\\datasets\\";
 
     String[] datasetNameList = new String[]{"HouseTwenty_TEST", "Lightning7_TEST", "Mallat_TEST",
         "Wine_TEST"};
@@ -28,7 +27,7 @@ public class MySample {
         int N = -1;
         int start = 0;
         try (FileInputStream inputStream = new FileInputStream(
-            String.format(filename, datasetName))) {
+            fileDir + datasetName + ".csv")) {
           String delimiter = ",";
           TimeSeries ts = TimeSeriesReader.getMyTimeSeries(inputStream, delimiter, false, N,
               start, hasHeader);
@@ -38,7 +37,7 @@ public class MySample {
           List<SimPieceSegment> segments = simPiece.segments;
           segments.sort(Comparator.comparingLong(SimPieceSegment::getInitTimestamp));
           try (PrintWriter writer = new PrintWriter(
-              new FileWriter(String.format(csvFile, datasetName, N, nout)))) {
+              new FileWriter(datasetName + "-" + N + "-" + nout + ".csv"))) {
             for (int i = 0; i < segments.size() - 1; i++) {
               // start point of this segment
               writer.println(segments.get(i).getInitTimestamp() + "," + segments.get(i).getB());
